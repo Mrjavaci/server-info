@@ -55,28 +55,12 @@ try {
 
     $linfo = new Linfo($settings);
     $linfo->scan();
-
-    if (isset($_SERVER['LINFO_NCURSES']) && php_sapi_name() == 'cli') {
-        $output = new \Linfo\Output\Ncurses($linfo);
+    if($settings["api_key"] === @$_GET["api_key"]){
+        $output = new \Linfo\Output\Json($linfo, array_key_exists('callback', $_GET) ? $_GET['callback'] : null);
+    }else{
+        echo json_encode(["error" => true, "reason" => "Api key error"]);
+        die();
     }
-    else {
-        switch (array_key_exists('out', $_GET) ? strtolower($_GET['out']) : 'html') {
-            default:
-            case 'html':
-                $output = new \Linfo\Output\Html($linfo);
-            break;
-
-            case 'json':
-            case 'jsonp': // To use JSON-P, pass the GET arg - callback=function_name
-                $output = new \Linfo\Output\Json($linfo, array_key_exists('callback', $_GET) ? $_GET['callback'] : null);
-            break;
-
-            case 'php_array':
-                $output = new \Linfo\Output\Serialized($linfo);
-            break;
-        }
-    }
-
     $output->output();
 
 } catch (FatalException $e) {

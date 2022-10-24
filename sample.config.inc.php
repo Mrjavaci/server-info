@@ -6,6 +6,7 @@
 /*
  * Usual configuration
  */
+$settings['api_key'] = ""; // For Api Key
 $settings['byte_notation'] = 1024; // Either 1024 or 1000; defaults to 1024
 $settings['dates'] = 'm/d/y h:i A (T)'; // Format for dates shown. See php.net/date for syntax
 $settings['language'] = 'en'; // Refer to the lang/ folder for supported languages
