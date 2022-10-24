@@ -4,6 +4,7 @@ namespace Linfo\Output;
 
 use Linfo\Linfo;
 use Linfo\Exceptions\FatalException;
+use Linfo\Meta\Errors;
 
 class Json implements Output
 {
@@ -31,8 +32,9 @@ class Json implements Output
         if (!isset($settings['compress_content']) || $settings['compress_content']) {
             ob_start(function_exists('ob_gzhandler') ? 'ob_gzhandler' : null);
         }
-
-        $encoded = json_encode($this->linfo->getInfo());
+        $info = $this->linfo->getInfo();
+        $info["errors"] = Errors::show();
+        $encoded = json_encode($info);
 
         if ($encoded === false) {
             throw new FatalException('{"error":"Failed generating json: '.(function_exists('json_last_error_msg') ? json_last_error_msg() : json_last_error()).'"}');
